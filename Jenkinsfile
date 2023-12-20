@@ -18,7 +18,7 @@ pipeline {
   stages {
     stage('npm install'){
       steps{
-         sh "npm install"
+         bat "npm install"
       }
     }
     stage('npm test'){
@@ -28,25 +28,25 @@ pipeline {
 		    }
 	    }
 	steps{
-	  sh "npm test -- --coverage"	
+	  bat "npm test -- --coverage"	
 	}
     }
     stage('npm build'){
       steps{
-        sh "npm run build"
+        bat "npm run build"
       }
     }
     stage('docker build'){
       environment {
-        COMMIT_TAG = sh(returnStdout: true, script: 'git rev-parse HEAD').trim().take(7)
+        COMMIT_TAG = bat(returnStdout: true, script: 'git rev-parse HEAD').trim().take(7)
         BUILD_IMAGE_REPO_TAG = "${params.IMAGE_REPO_NAME}:${env.BUILD_TAG}"
       }
       steps{
-        sh "docker build . -t $BUILD_IMAGE_REPO_TAG"
-        sh "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:$COMMIT_TAG"
-        sh "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:${readJSON(file: 'package.json').version}"
-        sh "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:${params.LATEST_BUILD_TAG}"
-        sh "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:$BRANCH_NAME-latest"
+        bat "docker build . -t $BUILD_IMAGE_REPO_TAG"
+        bat "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:$COMMIT_TAG"
+        bat "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:${readJSON(file: 'package.json').version}"
+        bat "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:${params.LATEST_BUILD_TAG}"
+        bat "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:$BRANCH_NAME-latest"
       }
     }
     stage('docker push'){
@@ -56,15 +56,15 @@ pipeline {
         }
       }
       environment {
-        COMMIT_TAG = sh(returnStdout: true, script: 'git rev-parse HEAD').trim().take(7)
+        COMMIT_TAG = bat(returnStdout: true, script: 'git rev-parse HEAD').trim().take(7)
         BUILD_IMAGE_REPO_TAG = "${params.IMAGE_REPO_NAME}:${env.BUILD_TAG}"
       }
       steps{
-        sh "docker push $BUILD_IMAGE_REPO_TAG"
-        sh "docker push ${params.IMAGE_REPO_NAME}:$COMMIT_TAG"
-        sh "docker push ${params.IMAGE_REPO_NAME}:${readJSON(file: 'package.json').version}"
-        sh "docker push ${params.IMAGE_REPO_NAME}:${params.LATEST_BUILD_TAG}"
-        sh "docker push ${params.IMAGE_REPO_NAME}:$BRANCH_NAME-latest"
+        bat "docker push $BUILD_IMAGE_REPO_TAG"
+        bat "docker push ${params.IMAGE_REPO_NAME}:$COMMIT_TAG"
+        bat "docker push ${params.IMAGE_REPO_NAME}:${readJSON(file: 'package.json').version}"
+        bat "docker push ${params.IMAGE_REPO_NAME}:${params.LATEST_BUILD_TAG}"
+        bat "docker push ${params.IMAGE_REPO_NAME}:$BRANCH_NAME-latest"
       }
     }
     stage('Remove Previous Stack'){
@@ -74,20 +74,20 @@ pipeline {
         }
       }
       steps{
-        sh "docker stack rm ${params.DOCKER_STACK_NAME}"
+        bat "docker stack rm ${params.DOCKER_STACK_NAME}"
 	      
 		      
       }
     }
     stage('Docker Stack Deploy'){
       steps{
-        sh "docker stack deploy -c ${params.DOCKER_COMPOSE_FILENAME} ${params.DOCKER_STACK_NAME}"
+        bat "docker stack deploy -c ${params.DOCKER_COMPOSE_FILENAME} ${params.DOCKER_STACK_NAME}"
       }
     }
   }
   post {
     always {
-      sh 'echo "This will always run"'
+      bat 'echo "This will always run"'
     }
   }
 }
