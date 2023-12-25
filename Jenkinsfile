@@ -54,7 +54,7 @@ pipeline {
       }
       environment {
         COMMIT_TAG = bat(returnStdout: true, script: 'git rev-parse HEAD').trim().take(7)
-        BUILD_IMAGE_REPO_TAG = "elhadjtahirouminthe/basic-react::${params.LATEST_BUILD_TAG}"
+        BUILD_IMAGE_REPO_TAG = "elhadjtahirouminthe/basic-react:${params.LATEST_BUILD_TAG}"
       }
       steps{
         bat "docker push $BUILD_IMAGE_REPO_TAG"
