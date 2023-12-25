@@ -38,13 +38,13 @@ pipeline {
     }
     stage('docker build'){
       environment {
-        COMMIT_TAG = bat(returnStdout: true, script: '@git rev-parse HEAD').trim().take(7)
+        COMMIT_TAG = bat(returnStdout: true, script: 'git rev-parse HEAD').trim().take(7)
         BUILD_IMAGE_REPO_TAG = "${params.IMAGE_REPO_NAME}:${params.LATEST_BUILD_TAG}"
       }
       steps{
         bat "docker build . -t $BUILD_IMAGE_REPO_TAG"
         bat "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:${params.LATEST_BUILD_TAG}"
-        bat "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:${readJSON(file: '@package.json').version}"
+        bat "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:${readJSON(file: 'package.json').version}"
         bat "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:${params.LATEST_BUILD_TAG}"
         bat "docker tag $BUILD_IMAGE_REPO_TAG ${params.IMAGE_REPO_NAME}:$BRANCH_NAME-latest"
       }
