@@ -45,7 +45,6 @@ pipeline {
         dockerImage = ''
       }
       steps{
-        bat "docker build . -t $BUILD_IMAGE_REPO_TAG"
         script {
          dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
