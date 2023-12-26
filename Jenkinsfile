@@ -55,10 +55,10 @@ pipeline {
       environment {
         COMMIT_TAG = bat(returnStdout: true, script: 'git rev-parse HEAD').trim().take(7)
         BUILD_IMAGE_REPO_TAG = "elhadjtahirouminthe/basic-react:latest"
+	REGISTRYCREDENTIAL = "minthe-docker-id"
       }
       steps{
         bat "docker push $BUILD_IMAGE_REPO_TAG"
-        
       }
     }
     stage('Remove Previous Stack'){
