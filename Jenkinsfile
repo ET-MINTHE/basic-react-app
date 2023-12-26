@@ -50,6 +50,11 @@ pipeline {
         }
       }
     }
+   stage('Docker Login') {
+      steps {
+        bat 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u elhadjtahirouminthe --password-stdin'
+      }
+    }
     stage('docker push'){
       when{
         expression {
