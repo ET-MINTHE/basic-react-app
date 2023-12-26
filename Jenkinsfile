@@ -62,11 +62,7 @@ pipeline {
 	REGISTRYCREDENTIAL = "minthe-docker-id"
       }
       steps{
-	script {
-		docker.withRegistry( '', REGISTRYCREDENTIAL ) {
-		  dockerImage.push()
-		}
-	}
+	 bat "docker push $BUILD_IMAGE_REPO_TAG"
       }
     }
     stage('Remove Previous Stack'){
