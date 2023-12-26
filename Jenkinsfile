@@ -46,7 +46,7 @@ pipeline {
       }
       steps{
         script {
-         dockerImage = docker.build REGISTRY
+		 bat "docker build . -t $BUILD_IMAGE_REPO_TAG"
         }
       }
     }
