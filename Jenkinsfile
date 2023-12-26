@@ -40,10 +40,15 @@ pipeline {
       environment {
         COMMIT_TAG = bat(returnStdout: true, script: 'git rev-parse HEAD').trim().take(7)
         BUILD_IMAGE_REPO_TAG = "${params.IMAGE_REPO_NAME}:${params.LATEST_BUILD_TAG}"
+	REGISTRY = "elhadjtahirouminthe/basic-react:latest"
+        registryCredential = "minthe-docker-id"
+        dockerImage = ''
       }
       steps{
         bat "docker build . -t $BUILD_IMAGE_REPO_TAG"
-       
+        script {
+         dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
       }
     }
     stage('docker push'){
@@ -58,7 +63,11 @@ pipeline {
 	REGISTRYCREDENTIAL = "minthe-docker-id"
       }
       steps{
-        bat "docker push $BUILD_IMAGE_REPO_TAG"
+	script {
+		docker.withRegistry( '', REGISTRYCREDENTIAL ) {
+		  dockerImage.push()
+		}
+	}
       }
     }
     stage('Remove Previous Stack'){
