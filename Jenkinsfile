@@ -52,7 +52,7 @@ pipeline {
     }
    stage('Docker Login') {
       steps {
-        bat 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u elhadjtahirouminthe --password-stdin'
+        bat 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u elhadjtahirouminthe -p Fantabamba25?!1_'
       }
     }
     stage('docker push'){
